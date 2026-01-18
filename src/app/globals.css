@@ -1,0 +1,438 @@
+@import "tailwindcss";
+
+@theme inline {
+  --animate-border-beam: border-beam calc(var(--duration)*1s) infinite linear;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --font-satoshi: 'Satoshi', sans-serif;
+  --font-geologica: 'Geologica', sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-satoshi: var(--font-satoshi);
+  --font-geologica: var(--font-geologica);
+}
+
+/* Lock zoom and prevent user scaling */
+html {
+  width: 100%;
+  -ms-content-zooming: none;
+  touch-action: pan-x pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+body {
+  width: 100%;
+  background: #f5f5f5;
+  color: var(--foreground);
+  font-family: 'Satoshi', sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+/* Border Beam Animation */
+@keyframes border-beam {
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+.border-beam {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: calc(var(--border-width) * 1px) solid transparent;
+  mask-clip: padding-box, border-box;
+  mask-composite: intersect;
+  mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
+  -webkit-mask-clip: padding-box, border-box;
+  -webkit-mask-composite: source-in;
+}
+
+.border-beam::after {
+  content: "";
+  position: absolute;
+  aspect-ratio: 1;
+  offset-anchor: calc(var(--anchor) * 1%) 50%;
+  width: calc(var(--size) * 1px);
+  animation: border-beam calc(var(--duration) * 1s) linear infinite;
+  animation-delay: var(--delay);
+  background: linear-gradient(to left, var(--color-from), var(--color-to), transparent);
+  offset-path: rect(0 auto auto 0 round calc(var(--size) * 1px));
+}
+
+/* Hide Next.js dev toolbar */
+[data-nextjs-dialog-overlay],
+[data-nextjs-toast],
+nextjs-portal {
+  display: none !important;
+}
+
+/* Glass Button Container */
+.glass-button {
+  --bg-color: rgba(221, 221, 221, 0.24);
+  --highlight: rgba(255, 255, 255, 0.75);
+  --text: #000000;
+
+  position: relative;
+  border: 1.33px solid #CBC4CC;
+  border-radius: 48px;
+  cursor: pointer;
+  overflow: hidden;
+  background: transparent;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.glass-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+.glass-button:active {
+  transform: scale(0.95);
+}
+
+.glass-filter,
+.glass-overlay,
+.glass-specular {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.glass-filter {
+  z-index: 1;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.glass-overlay {
+  z-index: 2;
+  background: var(--bg-color);
+}
+
+.glass-specular {
+  z-index: 3;
+  box-shadow: inset 1px 1px 1px var(--highlight);
+}
+
+.glass-content {
+  position: relative;
+  z-index: 4;
+  color: var(--text);
+  font-weight: 500;
+  pointer-events: auto;
+}
+
+/* CTA Button - same glass effect but larger */
+.glass-button-cta {
+  --bg-color: rgba(221, 221, 221, 0.24);
+  --highlight: rgba(255, 255, 255, 0.8);
+  --text: #ffffff;
+
+  position: relative;
+  border: 1.33px solid #CBC4CC;
+  border-radius: 48px;
+  cursor: pointer;
+  overflow: hidden;
+  background: transparent;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.glass-button-cta:hover {
+  box-shadow: 2px 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.glass-button-cta:active {
+  transform: scale(0.95);
+}
+
+.glass-button-cta .glass-filter {
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+/* Solid background */
+.gradient-bg {
+  background: #f1e9f2;
+}
+
+/* Gradient text for headline */
+.gradient-text-line1 {
+  background: linear-gradient(
+    107deg,
+    currentColor 3.38%,
+    #FF6B9D 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: color 0.5s ease;
+}
+
+.gradient-text-red {
+  color: #FF6B9D;
+}
+
+/* Letter spacing for headline */
+.headline-spacing {
+  letter-spacing: 0.3em;
+}
+
+/* Entrance animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+
+/* Initial state for animated elements */
+.animate-initial {
+  opacity: 0;
+}
+
+/* Nav Button - Individual navigation items */
+.nav-button {
+  position: relative;
+  padding: 10px 20px;
+  border-radius: 48px;
+  cursor: pointer;
+  overflow: hidden;
+  background: transparent;
+  border: 1.33px solid #CBC4CC;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  pointer-events: auto;
+  z-index: 100;
+}
+
+.nav-button:hover {
+  opacity: 0.7;
+  transform: translateY(-1px);
+}
+
+.nav-button:active {
+  transform: scale(0.95);
+}
+
+.nav-glass-filter,
+.nav-glass-overlay,
+.nav-glass-specular {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.nav-glass-filter {
+  z-index: 1;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 1;
+}
+
+.nav-button:hover .nav-glass-filter {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.nav-glass-overlay {
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.2);
+  opacity: 1;
+}
+
+.nav-button:hover .nav-glass-overlay {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-glass-specular {
+  z-index: 3;
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.5);
+  opacity: 1;
+}
+
+.nav-button:hover .nav-glass-specular {
+  box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.7);
+}
+
+.nav-content {
+  position: relative;
+  z-index: 4;
+  pointer-events: auto;
+}
+
+/* Floating particles */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(30, 107, 255, 0.15) 0%, rgba(30, 107, 255, 0.05) 50%, transparent 100%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle-1 {
+  width: 300px;
+  height: 300px;
+  top: 10%;
+  left: 15%;
+  animation: float 25s infinite ease-in-out;
+}
+
+.particle-2 {
+  width: 250px;
+  height: 250px;
+  top: 60%;
+  right: 20%;
+  animation: float 20s infinite ease-in-out 2s;
+}
+
+.particle-3 {
+  width: 200px;
+  height: 200px;
+  bottom: 15%;
+  left: 25%;
+  animation: float 30s infinite ease-in-out 4s;
+}
+
+.particle-4 {
+  width: 350px;
+  height: 350px;
+  top: 40%;
+  right: 10%;
+  animation: float 28s infinite ease-in-out 1s;
+}
+
+.particle-5 {
+  width: 180px;
+  height: 180px;
+  top: 25%;
+  right: 35%;
+  animation: float 22s infinite ease-in-out 3s;
+}
+
+.particle-6 {
+  width: 220px;
+  height: 220px;
+  bottom: 30%;
+  left: 40%;
+  animation: float 26s infinite ease-in-out 5s;
+}
+
+.particle-7 {
+  width: 280px;
+  height: 280px;
+  top: 70%;
+  left: 60%;
+  animation: float 24s infinite ease-in-out 2.5s;
+}
+
+.particle-8 {
+  width: 240px;
+  height: 240px;
+  top: 15%;
+  left: 70%;
+  animation: float 27s infinite ease-in-out 4.5s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translate(30px, -30px) scale(1.1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.9);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translate(40px, 15px) scale(1.05);
+    opacity: 0.6;
+  }
+}
+
+@layer utilities {
+  .tracking-\[7\.2px\] {
+    --tw-tracking: 7.2px;
+    letter-spacing: 7.2px;
+    padding: 45px;
+  }
+}

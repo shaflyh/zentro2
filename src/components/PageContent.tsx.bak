@@ -1,0 +1,688 @@
+"use client";
+
+import { useState, useCallback, useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { XIcon, TelegramIcon, ThreadsIcon, ArrowIcon } from "@/components/icons";
+import GlassButton, { GlassFilter } from "@/components/GlassButton";
+import NavButton from "@/components/NavButton";
+import HeroVideo from "@/components/HeroVideo";
+import ShaderBackground from "@/components/ShaderBackground";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+export default function PageContent() {
+  const [heroOpacity, setHeroOpacity] = useState(1);
+  const [cardSectionOpacity, setCardSectionOpacity] = useState(0);
+  const [aboutOpacity, setAboutOpacity] = useState(0);
+  const [pricingOpacity, setPricingOpacity] = useState(0);
+  const [faqOpacity, setFaqOpacity] = useState(0);
+  const [applicationOpacity, setApplicationOpacity] = useState(0);
+  
+  const sectionsContainerRef = useRef<HTMLDivElement>(null);
+  const aboutRef = useRef<HTMLElement>(null);
+  const pricingRef = useRef<HTMLElement>(null);
+  const faqRef = useRef<HTMLElement>(null);
+  const applicationRef = useRef<HTMLElement>(null);
+
+  const handleScrollProgress = useCallback((progress: number) => {
+    // Hero fades out at start (0-10%)
+    // Video plays (10-90%)
+    // Card section fades in at end (90-100%)
+
+    if (progress < 0.02) {
+      // At the top - hero visible
+      setHeroOpacity(1);
+      setCardSectionOpacity(0);
+    } else if (progress < 0.1) {
+      // Fading out hero (2% to 10%)
+      const fadeProgress = (progress - 0.02) / 0.08;
+      setHeroOpacity(1 - fadeProgress);
+      setCardSectionOpacity(0);
+    } else if (progress < 0.9) {
+      // Hidden during video scrub
+      setHeroOpacity(0);
+      setCardSectionOpacity(0);
+    } else {
+      // Fading in card section (90% to 100%)
+      const fadeInProgress = (progress - 0.9) / 0.1;
+      setHeroOpacity(0);
+      setCardSectionOpacity(fadeInProgress);
+    }
+  }, []);
+
+  // GSAP ScrollTrigger for content sections
+  useEffect(() => {
+    if (!sectionsContainerRef.current) return;
+
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: sectionsContainerRef.current,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 0.5,
+      onUpdate: (self) => {
+        const progress = self.progress;
+
+        // About section: 0-25%
+        if (progress < 0.25) {
+          const fadeProgress = progress / 0.25;
+          setAboutOpacity(fadeProgress);
+          setPricingOpacity(0);
+          setFaqOpacity(0);
+          setApplicationOpacity(0);
+        }
+        // Transition from About to Pricing: 25-35%
+        else if (progress < 0.35) {
+          const fadeProgress = (progress - 0.25) / 0.1;
+          setAboutOpacity(1 - fadeProgress);
+          setPricingOpacity(fadeProgress);
+          setFaqOpacity(0);
+          setApplicationOpacity(0);
+        }
+        // Pricing section: 35-50%
+        else if (progress < 0.5) {
+          setAboutOpacity(0);
+          setPricingOpacity(1);
+          setFaqOpacity(0);
+          setApplicationOpacity(0);
+        }
+        // Transition from Pricing to FAQ: 50-60%
+        else if (progress < 0.6) {
+          const fadeProgress = (progress - 0.5) / 0.1;
+          setAboutOpacity(0);
+          setPricingOpacity(1 - fadeProgress);
+          setFaqOpacity(fadeProgress);
+          setApplicationOpacity(0);
+        }
+        // FAQ section: 60-75%
+        else if (progress < 0.75) {
+          setAboutOpacity(0);
+          setPricingOpacity(0);
+          setFaqOpacity(1);
+          setApplicationOpacity(0);
+        }
+        // Transition from FAQ to Application: 75-85%
+        else if (progress < 0.85) {
+          const fadeProgress = (progress - 0.75) / 0.1;
+          setAboutOpacity(0);
+          setPricingOpacity(0);
+          setFaqOpacity(1 - fadeProgress);
+          setApplicationOpacity(fadeProgress);
+        }
+        // Application section: 85-100%
+        else {
+          setAboutOpacity(0);
+          setPricingOpacity(0);
+          setFaqOpacity(0);
+          setApplicationOpacity(1);
+        }
+      },
+    });
+
+    return () => {
+      scrollTrigger.kill();
+    };
+  }, []);
+
+  return (
+    <>
+      {/* Scroll container for video scrubbing - increased height for smoother control */}
+      <div className="h-[600vh] relative">
+        {/* Video Background */}
+        <HeroVideo onScrollProgress={handleScrollProgress} />
+
+        {/* Hero content overlay */}
+        <div
+          className="fixed inset-0 w-full h-screen z-10 transition-opacity duration-300"
+          style={{ opacity: heroOpacity, pointerEvents: heroOpacity < 0.1 ? 'none' : 'auto' }}
+        >
+          {/* Semi-transparent overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#f2e9e9]/30 via-transparent to-[#f2e9e9]/50 pointer-events-none" />
+
+          {/* SVG Filter for glass effect */}
+          <GlassFilter />
+
+          {/* Logo */}
+          <div className="absolute left-[60px] top-[50px] h-[44px] flex items-center p-2.5 z-20 animate-initial animate-slide-down delay-100">
+            <span className="text-white text-3xl font-normal font-['Satoshi']">
+              Zentro
+            </span>
+          </div>
+
+          {/* Nav Links - Left side */}
+          <div className="absolute left-[200px] top-[50px] flex items-center gap-2 z-20 animate-initial animate-slide-down delay-200">
+            <NavButton href="#" label="home" isActive={true} light={true} />
+            <NavButton href="#about" label="about" light={true} />
+            <NavButton href="#pricing" label="pricing" light={true} />
+            <NavButton href="#faq" label="FAQ" light={true} />
+          </div>
+
+          {/* Social Links - Right side */}
+          <div className="absolute right-[80px] top-[50px] z-20">
+            <GlassButton
+              className="px-6 py-3 animate-initial animate-slide-down delay-300"
+              contentClassName="gap-8"
+            >
+              <a href="#" className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                <XIcon className="w-4 h-4" />
+              </a>
+              <a href="#" className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                <TelegramIcon className="w-4 h-4" />
+              </a>
+              <a href="#" className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                <ThreadsIcon className="w-4 h-4" />
+              </a>
+            </GlassButton>
+          </div>
+
+          {/* Hero Section */}
+          <section className="absolute left-[80px] bottom-[120px] max-w-[600px] flex flex-col justify-start items-start gap-6 z-20">
+            <div className="flex flex-col gap-1">
+              <h1 className="gradient-text-line1 text-[48px] font-bold font-['Satoshi'] headline-spacing leading-[1.15] animate-initial animate-slide-up delay-400">
+                Spend privately.
+              </h1>
+              <h1 className="gradient-text-red text-[48px] font-bold font-['Satoshi'] headline-spacing leading-[1.15] animate-initial animate-slide-up delay-500">
+                Member owned.
+              </h1>
+              <h1 className="gradient-text-red text-[48px] font-bold font-['Satoshi'] headline-spacing leading-[1.15] animate-initial animate-slide-up delay-600">
+                Invite only.
+              </h1>
+            </div>
+            <p className="text-white/70 text-base font-normal font-['Satoshi'] leading-relaxed max-w-[480px] animate-initial animate-slide-up delay-700">
+              An invite-only card built for private spending. Member-owned, independent, and designed for those who value control, discretion, and exclusivity.
+            </p>
+          </section>
+
+          {/* CTA Buttons */}
+          <div className="absolute right-[80px] bottom-[80px] flex justify-end items-center gap-4 z-20 animate-initial animate-slide-up delay-800">
+            <GlassButton
+              variant="cta"
+              className="px-10 py-5"
+              contentClassName="gap-3"
+            >
+              <span className="text-white/80 text-lg font-medium font-['Geologica'] tracking-wider">
+                START YOUR APPLICATION NOW...
+              </span>
+            </GlassButton>
+            <GlassButton
+              variant="cta"
+              className="w-16 h-16"
+              contentClassName="justify-center"
+            >
+              <ArrowIcon className="w-6 h-6 text-white/70" />
+            </GlassButton>
+          </div>
+        </div>
+
+        {/* Content Sections - appears after video ends */}
+        <div
+          className="relative w-full transition-opacity duration-500"
+          style={{ opacity: cardSectionOpacity, pointerEvents: cardSectionOpacity < 0.1 ? 'none' : 'auto' }}
+        >
+          {/* Fixed shader background */}
+          <div className="fixed inset-0 -z-10">
+            <ShaderBackground />
+          </div>
+
+          {/* SVG Filter for glass effect */}
+          <GlassFilter />
+
+          {/* Fixed Navigation - same as hero */}
+          <div className="fixed top-0 left-0 right-0 z-50">
+            <div className="absolute left-[60px] top-[50px] h-[44px] flex items-center p-2.5">
+              <span className="text-white text-3xl font-normal font-['Satoshi']">
+                Zentro
+              </span>
+            </div>
+
+            <div className="absolute left-[200px] top-[50px] flex items-center gap-2">
+              <NavButton href="#" label="home" light />
+              <NavButton href="#about" label="about" light />
+              <NavButton href="#pricing" label="pricing" light />
+              <NavButton href="#faq" label="FAQ" light />
+            </div>
+
+            <div className="absolute right-[80px] top-[50px]">
+              <GlassButton
+                className="px-6 py-3"
+                contentClassName="gap-8"
+              >
+                <a href="#" className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                  <XIcon className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                  <TelegramIcon className="w-4 h-4" />
+                </a>
+                <a href="#" className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                  <ThreadsIcon className="w-4 h-4" />
+                </a>
+              </GlassButton>
+            </div>
+          </div>
+
+          {/* About Section */}
+          <section id="about" className="min-h-screen relative flex items-center justify-center px-20 pt-32 pb-20">
+            <div className="absolute left-[80px] top-[200px] max-w-[500px]">
+              <h2 className="text-[48px] font-bold font-['Satoshi'] text-white leading-[1.15] mb-6">
+                About <span className="text-[#e89888]">Zentro</span>
+              </h2>
+              <p className="text-white/70 text-base font-normal font-['Satoshi'] leading-relaxed mb-8">
+                An invite-only card built for private spending. Member-owned, independent, and designed for those who value control, discretion, and exclusivity.
+              </p>
+            </div>
+
+            <div className="absolute right-[80px] top-[200px] flex flex-col gap-8 max-w-[500px]">
+              <div className="flex flex-col gap-3">
+                <h3 className="text-xl font-semibold text-white/90 font-['Satoshi']">Privacy First</h3>
+                <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                  Your transactions, your business. Built for discretion.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <h3 className="text-xl font-semibold text-white/90 font-['Satoshi']">Member Owned</h3>
+                <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                  Independent and member-governed. No corporate overlords.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <h3 className="text-xl font-semibold text-white/90 font-['Satoshi']">Invite Only</h3>
+                <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                  Membership is limited. Join a select group.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Pricing Section */}
+          <section id="pricing" className="min-h-screen relative flex items-center justify-center px-20 py-20">
+            <div className="absolute left-[80px] top-[200px] max-w-[500px]">
+              <h2 className="text-[48px] font-bold font-['Satoshi'] text-white leading-[1.15] mb-6">
+                Simple <span className="text-[#e89888]">Pricing</span>
+              </h2>
+              <p className="text-white/70 text-base font-normal font-['Satoshi'] leading-relaxed">
+                Transparent membership with no hidden fees. Just exclusivity and control.
+              </p>
+            </div>
+
+            <div className="absolute right-[80px] top-[180px] flex flex-col gap-6 max-w-[600px]">
+              <GlassButton className="px-8 py-6 flex items-center justify-between">
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-xl font-semibold text-white/90 font-['Satoshi']">Basic</h3>
+                  <p className="text-white/60 text-sm font-['Satoshi']">Private transactions • Basic features</p>
+                </div>
+                <div className="text-3xl font-bold text-white">$99<span className="text-lg text-white/60">/mo</span></div>
+              </GlassButton>
+
+              <GlassButton className="px-8 py-6 flex items-center justify-between border-2 border-[#e89888]">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl font-semibold text-white/90 font-['Satoshi']">Pro</h3>
+                    <span className="text-xs text-[#e89888] uppercase">Popular</span>
+                  </div>
+                  <p className="text-white/60 text-sm font-['Satoshi']">Enhanced privacy • Priority support</p>
+                </div>
+                <div className="text-3xl font-bold text-white">$199<span className="text-lg text-white/60">/mo</span></div>
+              </GlassButton>
+
+              <GlassButton className="px-8 py-6 flex items-center justify-between">
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-xl font-semibold text-white/90 font-['Satoshi']">Elite</h3>
+                  <p className="text-white/60 text-sm font-['Satoshi']">Maximum privacy • VIP benefits</p>
+                </div>
+                <div className="text-3xl font-bold text-white">$499<span className="text-lg text-white/60">/mo</span></div>
+              </GlassButton>
+            </div>
+          </section>
+
+          {/* FAQ Section */}
+          <section id="faq" className="min-h-screen relative flex items-center justify-center px-20 py-20">
+            <div className="absolute left-[80px] top-[200px] max-w-[500px]">
+              <h2 className="text-[48px] font-bold font-['Satoshi'] text-white leading-[1.15] mb-6">
+                Frequently Asked <span className="text-[#e89888]">Questions</span>
+              </h2>
+              <p className="text-white/70 text-base font-normal font-['Satoshi'] leading-relaxed">
+                Everything you need to know about Zentro membership and how it works.
+              </p>
+            </div>
+
+            <div className="absolute right-[80px] top-[180px] flex flex-col gap-5 max-w-[600px]">
+              <GlassButton className="px-8 py-6 flex-col items-start gap-3 h-auto">
+                <h3 className="text-lg font-semibold text-white/90 font-['Satoshi']">
+                  How does the invite system work?
+                </h3>
+                <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                  Current members invite new applicants through our verification process.
+                </p>
+              </GlassButton>
+
+              <GlassButton className="px-8 py-6 flex-col items-start gap-3 h-auto">
+                <h3 className="text-lg font-semibold text-white/90 font-['Satoshi']">
+                  What makes Zentro different?
+                </h3>
+                <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                  Privacy-first, member-owned, and exclusively invite-only.
+                </p>
+              </GlassButton>
+
+              <GlassButton className="px-8 py-6 flex-col items-start gap-3 h-auto">
+                <h3 className="text-lg font-semibold text-white/90 font-['Satoshi']">
+                  Are there any hidden fees?
+                </h3>
+                <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                  No hidden fees. Transparent pricing with no surprises.
+                </p>
+              </GlassButton>
+
+              <GlassButton className="px-8 py-6 flex-col items-start gap-3 h-auto">
+                <h3 className="text-lg font-semibold text-white/90 font-['Satoshi']">
+                  Can I change my membership tier?
+                </h3>
+                <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                  Yes, upgrade or downgrade anytime. Changes take effect next cycle.
+                </p>
+              </GlassButton>
+            </div>
+          </section>
+
+          {/* Application Section */}
+          <section id="application" className="min-h-screen relative flex items-center justify-center px-20 py-20">
+            <div className="absolute left-[80px] bottom-[180px] max-w-[500px] flex flex-col gap-6">
+              <div className="flex flex-col gap-4">
+                <h2 className="text-[48px] font-bold font-['Satoshi'] text-white leading-[1.15]">
+                  Ready to join the<br />
+                  <span className="text-[#e89888]">exclusive circle?</span>
+                </h2>
+                <p className="text-white/70 text-base font-normal font-['Satoshi'] leading-relaxed">
+                  Apply now for your Zentro card. Limited memberships available for those who value privacy, control, and exclusivity.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <GlassButton
+                  variant="cta"
+           ref={sectionsContainerRef} className="relative w-full h-[400vh]">
+        {/* Fixed shader background */}
+        <div className="fixed inset-0 -z-10">
+          <ShaderBackground />
+        </div>
+
+        {/* SVG Filter for glass effect */}
+        <GlassFilter />
+
+        {/* Fixed Navigation - same as hero */}
+        <div className="fixed top-0 left-0 right-0 z-50">
+          <div className="absolute left-[60px] top-[50px] h-[44px] flex items-center p-2.5">
+            <span className="text-white text-3xl font-normal font-['Satoshi']">
+              Zentro
+            </span>
+          </div>
+
+          <div className="absolute left-[200px] top-[50px] flex items-center gap-2">
+            <NavButton href="#" label="home" light />
+            <NavButton href="#about" label="about" light />
+            <NavButton href="#pricing" label="pricing" light />
+            <NavButton href="#faq" label="FAQ" light />
+          </div>
+
+          <div className="absolute right-[80px] top-[50px]">
+            <GlassButton
+              className="px-6 py-3"
+              contentClassName="gap-8"
+            >
+              <a href="#" className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                <XIcon className="w-4 h-4" />
+              </a>
+              <a href="#" className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                <TelegramIcon className="w-4 h-4" />
+              </a>
+              <a href="#" className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                <ThreadsIcon className="w-4 h-4" />
+              </a>
+            </GlassButton>
+          </div>
+        </div>
+
+        {/* About Section */}
+        <section 
+          ref={aboutRef} 
+          id="about" 
+          className="fixed inset-0 w-full h-screen flex items-center justify-center px-20 pt-32 pb-20 transition-opacity duration-300"
+          style={{ opacity: aboutOpacity, pointerEvents: aboutOpacity < 0.1 ? 'none' : 'auto' }}
+        >
+        {/* SVG Filter for glass effect */}
+        <GlassFilter />
+
+        {/* Fixed Navigation - same as hero */}
+        <div className="fixed top-0 left-0 right-0 z-50">
+          <div className="absolute left-[60px] top-[50px] h-[44px] flex items-center p-2.5">
+            <span className="text-white text-3xl font-normal font-['Satoshi']">
+              Zentro
+            </span>
+          </div>
+
+          <div className="absolute left-[200px] top-[50px] flex items-center gap-2">
+            <NavButton href="#" label="home" light />
+            <NavButton href="#about" label="about" light />
+            <NavButton href="#pricing" label="pricing" light />
+            <NavButton href="#faq" label="FAQ" light />
+          </div>
+
+          <div className="absolute right-[80px] top-[50px]">
+            <GlassButton
+              className="px-6 py-3"
+              contentClassName="gap-8"
+            >
+              <a href="#" className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                <XIcon className="w-4 h-4" />
+              </a>
+              <a href="#" className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                <TelegramIcon className="w-4 h-4" />
+              </a>
+              <a href="#" className="w-5 h-5 flex items-center justify-center text-white/70 hover:text-white transition-colors">
+                <ThreadsIcon className="w-4 h-4" />
+              </a>
+            </GlassButton>
+          </div>
+        </div>
+
+        {/* About Section */}
+        <section 
+          ref={aboutRef} 
+          id="about" 
+          className="fixed inset-0 w-full h-screen flex items-center justify-center px-20 pt-32 pb-20 transition-opacity duration-300"
+          style={{ opacity: aboutOpacity, pointerEvents: aboutOpacity < 0.1 ? 'none' : 'auto' }}
+        >
+          <div className="absolute left-[80px] top-[200px] max-w-[500px]">
+            <h2 className="text-[48px] font-bold font-['Satoshi'] text-white leading-[1.15] mb-6">
+              About <span className="text-[#e89888]">Zentro</span>
+            </h2>
+            <p className="text-white/70 text-base font-normal font-['Satoshi'] leading-relaxed mb-8">
+              An invite-only card built for private spending. Member-owned, independent, and designed for those who value control, discretion, and exclusivity.
+            </p>
+          </div>
+
+          <div className="absolute right-[80px] top-[200px] flex flex-col gap-8 max-w-[500px]">
+            <div className="flex flex-col gap-3">
+              <h3 className="text-xl font-semibold text-white/90 font-['Satoshi']">Privacy First</h3>
+              <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                Your transactions, your business. Built for discretion.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3">
+              <h3 className="text-xl font-semibold text-white/90 font-['Satoshi']">Member Owned</h3>
+              <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                Independent and member-governed. No corporate overlords.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3">
+              <h3 className="text-xl font-semibold text-white/90 font-['Satoshi']">Invite Only</h3>
+              <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                Membership is limited. Join a select group.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing Section */}
+        <section 
+          ref={pricingRef} 
+          id="pricing" 
+          className="fixed inset-0 w-full h-screen flex items-center justify-center px-20 py-20 transition-opacity duration-300"
+          style={{ opacity: pricingOpacity, pointerEvents: pricingOpacity < 0.1 ? 'none' : 'auto' }}
+        >          <div className="absolute left-[80px] top-[200px] max-w-[500px]">
+            <h2 className="text-[48px] font-bold font-['Satoshi'] text-white leading-[1.15] mb-6">
+              Simple <span className="text-[#e89888]">Pricing</span>
+            </h2>
+            <p className="text-white/70 text-base font-normal font-['Satoshi'] leading-relaxed">
+              Transparent membership with no hidden fees. Just exclusivity and control.
+            </p>
+          </div>
+
+          <div className="absolute right-[80px] top-[180px] flex flex-col gap-6 max-w-[600px]">
+            <GlassButton className="px-8 py-6 flex items-center justify-between">
+              <div className="flex flex-col gap-2">
+                <h3 className="text-xl font-semibold text-white/90 font-['Satoshi']">Basic</h3>
+                <p className="text-white/60 text-sm font-['Satoshi']">Private transactions • Basic features</p>
+              </div>
+              <div className="text-3xl font-bold text-white">$99<span className="text-lg text-white/60">/mo</span></div>
+            </GlassButton>
+
+            <GlassButton className="px-8 py-6 flex items-center justify-between border-2 border-[#e89888]">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-semibold text-white/90 font-['Satoshi']">Pro</h3>
+                  <span className="text-xs text-[#e89888] uppercase">Popular</span>
+                </div>
+                <p className="text-white/60 text-sm font-['Satoshi']">Enhanced privacy • Priority support</p>
+              </div>
+              <div className="text-3xl font-bold text-white">$199<span className="text-lg text-white/60">/mo</span></div>
+            </GlassButton>
+
+            <GlassButton className="px-8 py-6 flex items-center justify-between">
+              <div className="flex flex-col gap-2">
+                <h3 className="text-xl font-semibold text-white/90 font-['Satoshi']">Elite</h3>
+                <p className="text-white/60 text-sm font-['Satoshi']">Maximum privacy • VIP benefits</p>
+              </div>
+              <div className="text-3xl font-bold text-white">$499<span className="text-lg text-white/60">/mo</span></div>
+            </GlassButton>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section 
+          ref={faqRef} 
+          id="faq" 
+          className="fixed inset-0 w-full h-screen flex items-center justify-center px-20 py-20 transition-opacity duration-300"
+          style={{ opacity: faqOpacity, pointerEvents: faqOpacity < 0.1 ? 'none' : 'auto' }}
+        >
+          <div className="absolute left-[80px] top-[200px] max-w-[500px]">
+            <h2 className="text-[48px] font-bold font-['Satoshi'] text-white leading-[1.15] mb-6">
+              Frequently Asked <span className="text-[#e89888]">Questions</span>
+            </h2>
+            <p className="text-white/70 text-base font-normal font-['Satoshi'] leading-relaxed">
+              Everything you need to know about Zentro membership and how it works.
+            </p>
+          </div>
+
+          <div className="absolute right-[80px] top-[180px] flex flex-col gap-5 max-w-[600px]">
+            <GlassButton className="px-8 py-6 flex-col items-start gap-3 h-auto">
+              <h3 className="text-lg font-semibold text-white/90 font-['Satoshi']">
+                How does the invite system work?
+              </h3>
+              <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                Current members invite new applicants through our verification process.
+              </p>
+            </GlassButton>
+
+            <GlassButton className="px-8 py-6 flex-col items-start gap-3 h-auto">
+              <h3 className="text-lg font-semibold text-white/90 font-['Satoshi']">
+                What makes Zentro different?
+              </h3>
+              <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                Privacy-first, member-owned, and exclusively invite-only.
+              </p>
+            </GlassButton>
+
+            <GlassButton className="px-8 py-6 flex-col items-start gap-3 h-auto">
+              <h3 className="text-lg font-semibold text-white/90 font-['Satoshi']">
+                Are there any hidden fees?
+              </h3>
+              <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                No hidden fees. Transparent pricing with no surprises.
+              </p>
+            </GlassButton>
+
+            <GlassButton className="px-8 py-6 flex-col items-start gap-3 h-auto">
+              <h3 className="text-lg font-semibold text-white/90 font-['Satoshi']">
+                Can I change my membership tier?
+              </h3>
+              <p className="text-white/60 text-sm font-['Satoshi'] leading-relaxed">
+                Yes, upgrade or downgrade anytime. Changes take effect next cycle.
+              </p>
+            </GlassButton>
+          </div>
+        </section>
+
+        {/* Application Section */}
+        <section 
+          ref={applicationRef} 
+          id="application" 
+          className="fixed inset-0 w-full h-screen flex items-center justify-center px-20 py-20 transition-opacity duration-300"
+          style={{ opacity: applicationOpacity, pointerEvents: applicationOpacity < 0.1 ? 'none' : 'auto' }}
+        >
+          <div className="absolute left-[80px] bottom-[180px] max-w-[500px] flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
+              <h2 className="text-[48px] font-bold font-['Satoshi'] text-white leading-[1.15]">
+                Ready to join the<br />
+                <span className="text-[#e89888]">exclusive circle?</span>
+              </h2>
+              <p className="text-white/70 text-base font-normal font-['Satoshi'] leading-relaxed">
+                Apply now for your Zentro card. Limited memberships available for those who value privacy, control, and exclusivity.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <GlassButton
+                variant="cta"
+                className="px-10 py-5"
+                contentClassName="gap-3"
+              >
+                <span className="text-white/80 text-lg font-medium font-['Geologica'] tracking-wider">
+                  START YOUR APPLICATION NOW...
+                </span>
+              </GlassButton>
+              <GlassButton
+                variant="cta"
+                className="w-16 h-16"
+                contentClassName="justify-center"
+              >
+                <ArrowIcon className="w-6 h-6 text-white/70" />
+              </GlassButton>
+            </div>
+          </div>
+
+          <div className="absolute right-[120px] bottom-[180px]">
+            <div className="w-[400px] h-[250px] rounded-2xl bg-gradient-to-br from-[#1a1a2e] via-[#2d2d44] to-[#1a1a2e] shadow-2xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent" />
+              <div className="absolute top-6 left-6">
+                <span className="text-white/90 text-xl font-medium font-['Satoshi']">Zentro</span>
+              </div>
+              <div className="absolute top-6 right-6 w-12 h-9 rounded-md bg-gradient-to-br from-[#d4af37] to-[#aa8a2e]" />
+              <div className="absolute bottom-16 left-6 flex gap-4">
+                <span className="text-white/60 text-sm tracking-widest">••••</span>
+                <span className="text-white/60 text-sm tracking-widest">••••</span>
+                <span className="text-white/60 text-sm tracking-widest">••••</span>
+                <span className="text-white/60 text-sm tracking-widest">••••</span>
+              </div>
+              <div className="absolute bottom-6 left-6">
+                <span className="text-white/50 text-xs uppercase tracking-wider">Member Since 2024</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </>
+  );
+}
