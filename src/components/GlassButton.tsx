@@ -64,8 +64,16 @@ export default function GlassButton({
       <div className="glass-filter" />
       <div className="glass-overlay" />
       <div ref={specularRef} className="glass-specular" />
-      <div className={`glass-content flex items-center ${contentClassName}`}>{children}</div>
-      <BorderBeam size={100} duration={12} borderWidth={2} colorFrom="#FF6B9D" colorTo="#E91E8C" />
+      <div className={`glass-content flex items-center ${contentClassName}`}>
+        {children}
+      </div>
+      <BorderBeam
+        size={100}
+        duration={12}
+        borderWidth={2}
+        colorFrom="#FF6B9D"
+        colorTo="#E91E8C"
+      />
     </button>
   );
 }

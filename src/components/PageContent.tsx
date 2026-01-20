@@ -95,8 +95,8 @@ export default function PageContent() {
       
       // Keep landing at full opacity for first 3 viewport heights (animation plays fully)
       // Then fade out during next viewport height
-      const landingStayDuration = landingHeight * 3; // Stay visible for 3vh
-      const landingFadeDuration = landingHeight * 1; // Fade over 1vh
+      const landingStayDuration = landingHeight * 0.4; // Stay visible for 3vh
+      const landingFadeDuration = landingHeight * 0.1; // Fade over 1vh
       const landingFade = Math.max(0, 1 - Math.max(0, (scrollY - landingStayDuration) / landingFadeDuration));
       setLandingOpacity(landingFade);
       
@@ -257,7 +257,7 @@ export default function PageContent() {
       <div className="h-[100vh] relative bg-[#f5f5f5]" />
 
       {/* Spline Animation Section - fixed position that starts after landing fades */}
-      <div ref={splineContainerRef} className="h-[800vh] relative bg-[#f5f5f5]">
+      <div ref={splineContainerRef} className="h-[400vh] relative bg-[#f5f5f5]">
         <div className="sticky top-0 w-full h-screen transition-opacity duration-700" style={{ opacity: splineOpacity }}>
           <Spline scene="https://prod.spline.design/bfNQTgi7LV97OIwz/scene.splinecode" />
         </div>
