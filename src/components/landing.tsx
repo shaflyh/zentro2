@@ -106,7 +106,6 @@ export default function Landing() {
       );
 
       // Spline section fade out (when reaching About section)
-      // Spacers: h-screen (100vh) + h-[50vh] (50vh) + h-[40vh] spacer in SplineSection = 190vh
       const splineFadeOutStart = vh * 1.5; // Start fading out at 1.5vh
       const splineFadeOutDuration = vh * 0.3; // Fade out over 0.3vh
       const splineFadeOut = Math.max(
@@ -167,7 +166,7 @@ export default function Landing() {
         {/* Buffer/spacer section before video scroll starts */}
         <div className="h-screen relative bg-[#f5f5f5]" />
 
-        {/* Landing Section - fixed overlay that fades out on scroll */}
+        {/* Landing Section */}
         <LandingHero
           landingOpacity={landingOpacity}
           onSignIn={() => setShowSignInModal(true)}
@@ -176,13 +175,13 @@ export default function Landing() {
         {/* Buffer/spacer section before spline scroll starts */}
         <div className="h-[50vh] relative bg-[#f5f5f5]" />
 
-        {/* Spline Animation Section - fixed position that starts after landing fades */}
+        {/* Spline Animation Section */}
         <SplineSection
           splineContainerRef={splineContainerRef}
           splineOpacity={splineSectionOpacity}
         />
 
-        {/* Content Sections - normal flow layout with background overlay on spline */}
+        {/* Content Sections */}
         <ContentSections
           aboutRef={aboutRef}
           openFaq={openFaq}
