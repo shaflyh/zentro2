@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Landing from "@/components/landing";
-import MobileLanding from "@/components/mobile-landing";
+import PageContent from "@/components/PageContent";
+import MobileLanding from "@/components/MobileLanding";
 
 export default function Home() {
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
@@ -12,11 +12,11 @@ export default function Home() {
       // Tablet and mobile: up to 1024px (includes most tablets in portrait and landscape)
       setIsMobile(window.innerWidth <= 1024);
     };
-
+    
     checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    return () => window.removeEventListener("resize", checkMobile);
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Don't render anything until we know the device type
@@ -24,5 +24,5 @@ export default function Home() {
     return null;
   }
 
-  return isMobile ? <MobileLanding /> : <Landing />;
+  return isMobile ? <MobileLanding /> : <PageContent />;
 }
