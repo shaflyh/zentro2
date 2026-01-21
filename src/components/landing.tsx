@@ -9,6 +9,7 @@ import SplineSection from "@/components/landing-sections/spline-section";
 import ContentSections from "@/components/landing-sections/content-sections";
 import InviteModal from "@/components/landing-sections/invite-modal";
 import SignInModal from "@/components/landing-sections/sign-in-modal";
+import SmoothScroll from "@/components/landing-sections/smooth-scroll";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -79,30 +80,42 @@ export default function Landing() {
     };
   }, []);
 
-  // Fade transitions: Landing -> Black -> Spline
+  // Fade transitions: Landing -> Spline -> About
   useEffect(() => {
     let lastLandingOpacity = 1;
     let lastSplineSectionOpacity = 0;
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const landingHeight = window.innerHeight;
+      const vh = window.innerHeight;
 
-      const landingStayDuration = landingHeight * 0.4;
-      const landingFadeDuration = landingHeight * 0.1;
-
+      // Landing fade out
+      const landingStayDuration = vh * 0.4;
+      const landingFadeDuration = vh * 0.1;
       const landingFade = Math.max(
         0,
         1 - Math.max(0, (scrollY - landingStayDuration) / landingFadeDuration),
       );
 
-      // Spline section only starts fading in AFTER landing has completely faded out
-      const landingFadeEnd = landingStayDuration + landingFadeDuration; // 0.5vh
-      const splineSectionFadeStart = landingFadeEnd; // Start after landing is gone
-      const splineSectionFade = Math.min(
+      // Spline section fade in (after landing fades out)
+      const landingFadeEnd = landingStayDuration + landingFadeDuration;
+      const splineFadeInStart = landingFadeEnd;
+      const splineFadeIn = Math.min(
         1,
-        Math.max(0, (scrollY - splineSectionFadeStart) / landingFadeDuration),
+        Math.max(0, (scrollY - splineFadeInStart) / landingFadeDuration),
       );
+
+      // Spline section fade out (when reaching About section)
+      // Spacers: h-screen (100vh) + h-[50vh] (50vh) + h-[40vh] spacer in SplineSection = 190vh
+      const splineFadeOutStart = vh * 1.5; // Start fading out at 1.5vh
+      const splineFadeOutDuration = vh * 0.3; // Fade out over 0.3vh
+      const splineFadeOut = Math.max(
+        0,
+        1 - Math.max(0, (scrollY - splineFadeOutStart) / splineFadeOutDuration),
+      );
+
+      // Final spline opacity: fade in first, then fade out
+      const splineSectionFade = Math.min(splineFadeIn, splineFadeOut);
 
       // Only update state if values actually changed (avoids unnecessary re-renders)
       if (landingFade !== lastLandingOpacity) {
@@ -145,8 +158,9 @@ export default function Landing() {
   }, []);
 
   return (
-    <div>
-      <>
+    <SmoothScroll>
+      {/* <div> */}
+      <div>
         {/* Intro Animation Screen */}
         {!introComplete && <IntroScreen />}
 
@@ -193,7 +207,7 @@ export default function Landing() {
         {showSignInModal && (
           <SignInModal onClose={() => setShowSignInModal(false)} />
         )}
-      </>
-    </div>
+      </div>
+    </SmoothScroll>
   );
 }

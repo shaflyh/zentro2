@@ -31,7 +31,7 @@ export default function SplineCards({ isVisible = true }: SplineCardsProps) {
       {/* {shouldRenderSpline && <Spline scene="https://prod.spline.design/GjZqt5ajJpZwSkLN/scene.splinecode" />} */}
       {/* Peformance Test Spline */}
       {shouldRenderSpline && (
-        <Spline scene="https://prod.spline.design/ePCnXvzRZlbURLkt/scene.splinecode" />
+        <Spline scene="https://prod.spline.design/BYKKIpO2AU3alsvb/scene.splinecode" />
       )}
     </div>
   );

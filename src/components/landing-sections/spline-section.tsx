@@ -15,6 +15,9 @@ export default function SplineSection({
   splineContainerRef,
   splineOpacity,
 }: SplineSectionProps) {
+  // Only mount Spline when it should be visible
+  const shouldMount = splineOpacity > 0;
+
   return (
     <>
       {/* Fixed fullscreen Spline that fades in/out */}
@@ -25,14 +28,16 @@ export default function SplineSection({
           pointerEvents: splineOpacity < 0.1 ? "none" : "auto",
         }}
       >
-        <Spline scene="https://prod.spline.design/bfNQTgi7LV97OIwz/scene.splinecode" />
+        {shouldMount && (
+          <Spline scene="https://prod.spline.design/bfNQTgi7LV97OIwz/scene.splinecode" />
+        )}
       </div>
 
       {/* Spacer to provide scroll distance for the Spline animation */}
-      {/* <div
+      <div
         ref={splineContainerRef}
-        className="h-[200vh] relative bg-transparent"
-      /> */}
+        className="h-[40vh] relative bg-transparent"
+      />
     </>
   );
 }
