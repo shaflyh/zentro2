@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Landing from "@/components/landing";
-import MobileLanding from "@/components/MobileLanding";
+import MobileLanding from "@/components/mobile-landing";
 
 export default function Home() {
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
