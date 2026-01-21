@@ -33,7 +33,7 @@ export default function LandingHero({
         }}
       />
 
-      <div className="page-element absolute left-[16px] top-[30px] h-[44px] flex items-center z-20">
+      <div className="page-element absolute left-[24px] top-[30px] h-[44px] flex items-center z-20">
         <span className="text-black text-3xl font-bold font-['Satoshi'] tracking-[7px]">
           Zentro
         </span>
@@ -51,19 +51,19 @@ export default function LandingHero({
         </GlassButton>
       </div>
 
-      <div className="page-element absolute left-[20px] bottom-[60px] max-w-[600px] flex flex-col justify-start items-start gap-6 z-20">
+      <div className="page-element absolute left-[24px] bottom-[72px] max-w-[600px] flex flex-col justify-start items-start gap-6 z-20">
         <div className="flex flex-col gap-1">
-          <h1 className="gradient-text-line1 text-[40px] font-bold font-['Satoshi'] tracking-[11.52px] leading-[1] animate-initial animate-slide-up delay-400 text-black">
+          <h1 className="gradient-text-line1 text-[32px] font-bold font-['Satoshi'] tracking-[11.52px] leading-[1] animate-initial animate-slide-up delay-400 text-black">
             Spend privately.
           </h1>
-          <h1 className="gradient-text-line1 text-[40px] font-bold font-['Satoshi'] tracking-[11.52px] leading-[1] animate-initial animate-slide-up delay-500 text-black">
+          <h1 className="gradient-text-line1 text-[32px] font-bold font-['Satoshi'] tracking-[11.52px] leading-[1] animate-initial animate-slide-up delay-500 text-black">
             Member owned.
           </h1>
-          <h1 className="gradient-text-line1 text-[40px] font-bold font-['Satoshi'] tracking-[11.52px] leading-[1] animate-initial animate-slide-up delay-600 text-black">
+          <h1 className="gradient-text-line1 text-[32px] font-bold font-['Satoshi'] tracking-[11.52px] leading-[1] animate-initial animate-slide-up delay-600 text-black">
             Invite only.
           </h1>
         </div>
-        <p className="text-black text-[15px] font-bold font-['Satoshi'] leading-[1.6] max-w-[550px] animate-initial animate-slide-up delay-700">
+        <p className="text-black text-[15px] font-bold font-['Satoshi'] leading-[1.6] max-w-[480px] animate-initial animate-slide-up delay-700">
           An invite-only card built for private spending. Member-owned,
           independent, and designed for those who value control, discretion, and
           exclusivity.
