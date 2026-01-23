@@ -291,12 +291,14 @@ export default function MobileLanding() {
           display: landingComplete ? "none" : "flex",
         }}
       >
-        {/* Spline Background Animation - only after intro */}
-        {introComplete && (
-          <div className="absolute inset-0 w-full h-full">
-            <Spline scene="https://prod.spline.design/uS2baGaekXGbRGyR/scene.splinecode" />
-          </div>
-        )}
+        {/* Background Image */}
+        <div className="absolute inset-0 w-full h-full">
+          <img
+            src="/mobile-bg.png"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
 
         {/* Dark Overlay */}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-[5]" />
