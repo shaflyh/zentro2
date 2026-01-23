@@ -29,14 +29,14 @@ export default function SplineSection({
         }}
       >
         {shouldMount && (
-          <Spline scene="https://prod.spline.design/bfNQTgi7LV97OIwz/scene.splinecode" />
+          <Spline scene="https://prod.spline.design/J1WQOQGYmdelRk56/scene.splinecode" />
         )}
       </div>
 
       {/* Spacer to provide scroll distance for the Spline animation */}
       <div
         ref={splineContainerRef}
-        className="h-[40vh] relative bg-transparent"
+        className="h-[20vh] relative bg-transparent"
       />
     </>
   );

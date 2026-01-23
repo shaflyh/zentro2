@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import IntroScreen from "@/components/landing-sections/intro-screen";
 import LandingHero from "@/components/landing-sections/landing-hero-v2";
-import SplineSection from "@/components/landing-sections/spline-section-v2";
+import SplineSection from "@/components/landing-sections/spline-section";
 import ContentSections from "@/components/landing-sections/content-sections";
 import InviteModal from "@/components/landing-sections/invite-modal";
 import SignInModal from "@/components/landing-sections/sign-in-modal";
@@ -18,10 +18,12 @@ if (typeof window !== "undefined") {
 export default function Landing() {
   const [introComplete, setIntroComplete] = useState(false);
   const [landingOpacity, setLandingOpacity] = useState(1);
+  const [splineSectionOpacity, setSplineSectionOpacity] = useState(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
 
+  const splineContainerRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
 
   // Always scroll to top on mount/refresh
@@ -78,26 +80,50 @@ export default function Landing() {
     };
   }, []);
 
-  // Landing section fade out on scroll
+  // Fade transitions: Landing -> Spline -> About
   useEffect(() => {
     let lastLandingOpacity = 1;
+    let lastSplineSectionOpacity = 0;
 
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const vh = window.innerHeight;
 
-      // Landing fade out (starts after 0.3vh, fades over 0.2vh)
-      const landingStayDuration = vh * 0.3;
-      const landingFadeDuration = vh * 0.2;
+      // Landing fade out
+      const landingStayDuration = vh * 0.4;
+      const landingFadeDuration = vh * 0.1;
       const landingFade = Math.max(
         0,
         1 - Math.max(0, (scrollY - landingStayDuration) / landingFadeDuration),
       );
 
-      // Only update state if value changed (avoids unnecessary re-renders)
+      // Spline section fade in (after landing fades out)
+      const landingFadeEnd = landingStayDuration + landingFadeDuration;
+      const splineFadeInStart = landingFadeEnd;
+      const splineFadeIn = Math.min(
+        1,
+        Math.max(0, (scrollY - splineFadeInStart) / landingFadeDuration),
+      );
+
+      // Spline section fade out (when reaching About section)
+      const splineFadeOutStart = vh * 1.5; // Start fading out at 1.5vh
+      const splineFadeOutDuration = vh * 0.3; // Fade out over 0.3vh
+      const splineFadeOut = Math.max(
+        0,
+        1 - Math.max(0, (scrollY - splineFadeOutStart) / splineFadeOutDuration),
+      );
+
+      // Final spline opacity: fade in first, then fade out
+      const splineSectionFade = Math.min(splineFadeIn, splineFadeOut);
+
+      // Only update state if values actually changed (avoids unnecessary re-renders)
       if (landingFade !== lastLandingOpacity) {
         lastLandingOpacity = landingFade;
         setLandingOpacity(landingFade);
+      }
+      if (splineSectionFade !== lastSplineSectionOpacity) {
+        lastSplineSectionOpacity = splineSectionFade;
+        setSplineSectionOpacity(splineSectionFade);
       }
     };
 
@@ -147,10 +173,13 @@ export default function Landing() {
         />
 
         {/* Spacer to let hero fade out before Spline appears */}
-        <div className="h-[60vh] relative bg-white" />
+        <div className="h-[120vh] relative bg-white" />
 
-        {/* Spline Video Section */}
-        <SplineSection />
+        {/* Spline Animation Section */}
+        <SplineSection
+          splineContainerRef={splineContainerRef}
+          splineOpacity={splineSectionOpacity}
+        />
 
         {/* Content Sections */}
         <ContentSections
