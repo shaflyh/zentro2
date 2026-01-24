@@ -7,7 +7,7 @@ type SignInModalProps = {
 
 export default function SignInModal({ onClose }: SignInModalProps) {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-6">
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
@@ -44,7 +44,7 @@ export default function SignInModal({ onClose }: SignInModalProps) {
           </div>
 
           <div className="space-y-4">
-            <div className="relative rounded-[24px] overflow-hidden">
+            <div className="relative rounded-3xl overflow-hidden">
               <BorderBeam
                 size={200}
                 duration={15}
@@ -59,7 +59,7 @@ export default function SignInModal({ onClose }: SignInModalProps) {
               />
             </div>
 
-            <div className="relative rounded-[24px] overflow-hidden">
+            <div className="relative rounded-3xl overflow-hidden">
               <BorderBeam
                 size={200}
                 duration={15}

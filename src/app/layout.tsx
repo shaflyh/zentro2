@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Zentro - Private Spending Card",
-  description: "An invite-only card built for private spending. Member-owned, independent, and designed for those who value control, discretion, and exclusivity.",
+  description: "A token-gated card built for private spending. Member-owned, independent, and designed for those who value control, discretion, and exclusivity.",
 };
 
 export default function RootLayout({

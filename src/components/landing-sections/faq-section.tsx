@@ -5,17 +5,14 @@ type FaqSectionProps = {
   onToggleFaq: (index: number) => void;
 };
 
-export default function FaqSection({
-  openFaq,
-  onToggleFaq,
-}: FaqSectionProps) {
+export default function FaqSection({ openFaq, onToggleFaq }: FaqSectionProps) {
   return (
     <section
       id="faq"
       className="relative w-full min-h-screen flex items-center justify-center px-20 z-10 bg-white"
     >
-      <div className="flex items-start justify-between gap-16 w-full max-w-[1400px]">
-        <div className="flex flex-col gap-4 max-w-[700px] w-full">
+      <div className="flex items-start justify-between gap-16 w-full max-w-350">
+        <div className="flex flex-col gap-4 max-w-175 w-full">
           <div className="flex flex-col gap-2">
             <GlassButton
               className="px-8 py-6 hover:border-[#FF6B9D]/30 border-2 border-transparent transition-all duration-200 cursor-pointer"
@@ -23,7 +20,7 @@ export default function FaqSection({
             >
               <div className="flex items-center justify-between w-full">
                 <h3 className="text-lg font-semibold text-[#FF6B9D] font-['Satoshi']">
-                  How does the invite system work?
+                  How does the token system work?
                 </h3>
                 <span className="text-[#FF6B9D] text-2xl">
                   {openFaq === 0 ? "−" : "+"}
@@ -33,9 +30,9 @@ export default function FaqSection({
             {openFaq === 0 && (
               <GlassButton className="px-8 py-6">
                 <p className="text-black/60 text-sm font-['Satoshi'] leading-relaxed">
-                  Current members invite new applicants through our verification
-                  process. Each invitation is carefully reviewed to ensure
-                  alignment with Zentro's values of privacy and discretion.
+                  Hold $ZFY tokens to gain access to Zentro membership. Token
+                  holders enjoy exclusive benefits including revenue-driven
+                  buybacks and burns, ensuring alignment with Zentro's values.
                 </p>
               </GlassButton>
             )}
@@ -59,7 +56,7 @@ export default function FaqSection({
               <GlassButton className="px-8 py-6">
                 <p className="text-black/60 text-sm font-['Satoshi'] leading-relaxed">
                   Zentro is privacy-first, member-owned, and exclusively
-                  invite-only. We provide zero-knowledge financial
+                  token-gated. We provide zero-knowledge financial
                   infrastructure without corporate oversight or compromises.
                 </p>
               </GlassButton>
@@ -108,16 +105,16 @@ export default function FaqSection({
             {openFaq === 3 && (
               <GlassButton className="px-8 py-6">
                 <p className="text-black/60 text-sm font-['Satoshi'] leading-relaxed">
-                  Membership requires an invitation from an existing member and
-                  completion of our verification process. We carefully curate
-                  our community to maintain exclusivity and shared values.
+                  Membership requires holding $ZFY tokens and completion of our
+                  verification process. We carefully curate our community to
+                  maintain exclusivity and shared values.
                 </p>
               </GlassButton>
             )}
           </div>
         </div>
 
-        <div className="flex flex-col max-w-[500px] flex-shrink-0">
+        <div className="flex flex-col max-w-125 shrink-0">
           <h2 className="text-[48px] font-bold font-['Satoshi'] text-black tracking-[11.52px] leading-[1.3] mb-6">
             Frequently Asked <span className="text-[#FF6B9D]">Questions</span>
           </h2>
