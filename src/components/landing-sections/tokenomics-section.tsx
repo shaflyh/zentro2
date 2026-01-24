@@ -1,8 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { TokenCoinIcon, CopyIcon, CheckIcon } from "@/components/icons";
+import dynamic from "next/dynamic";
+import { CopyIcon, CheckIcon } from "@/components/icons";
 import GlassButton from "@/components/GlassButton";
+
+const Spline = dynamic(() => import("@splinetool/react-spline"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-150 h-150 flex items-center justify-center">
+      <div className="w-16 h-16 border-4 border-[#FF6B9D] border-t-transparent rounded-full animate-spin" />
+    </div>
+  ),
+});
 
 export default function TokenomicsSection() {
   const [copied, setCopied] = useState(false);
@@ -44,13 +54,11 @@ export default function TokenomicsSection() {
       className="relative w-full min-h-screen flex items-center justify-center px-32 z-10 bg-white"
     >
       <div className="flex items-center justify-around gap-16 w-full max-w-350">
-        {/* Left side - Token Icon */}
-        <div className="shrink-0 flex items-center justify-center">
-          <div className="relative">
-            {/* Glow effect behind coin */}
-            <div className="absolute inset-0 blur-3xl opacity-30 bg-linear-to-br from-[#FF6B9D] to-[#E91E8C] rounded-full scale-110" />
-            <TokenCoinIcon className="w-87.5 h-87.5 relative z-10" />
-          </div>
+        {/* Left side - Spline 3D Token */}
+        <div className="shrink-0 w-100 h-200 relative">
+          <Spline scene="https://prod.spline.design/aTVdyFwCFG7ccIa3/scene.splinecode" />
+          {/* White overlay to cover Spline watermark */}
+          <div className="absolute bottom-0 right-0 w-48 h-16 bg-white z-10" />
         </div>
 
         {/* Right side - Token Info */}
