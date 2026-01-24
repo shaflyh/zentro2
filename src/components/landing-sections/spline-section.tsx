@@ -29,10 +29,7 @@ export default function SplineSection({
       </div>
 
       {/* Spacer to provide scroll distance for the Spline animation */}
-      <div
-        ref={splineContainerRef}
-        className="h-[20vh] relative bg-transparent"
-      />
+      <div ref={splineContainerRef} className="h-[10vh] relative bg-white" />
     </>
   );
 }

@@ -21,8 +21,8 @@ export default function SmoothScroll({
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 1, // Reduce scroll speed (lower = slower)
-      touchMultiplier: 2, // Reduce touch scroll speed too
+      wheelMultiplier: 0.2, // Reduce scroll speed (lower = slower)
+      touchMultiplier: 1, // Reduce touch scroll speed too
     });
 
     lenisRef.current = lenis;

@@ -90,7 +90,7 @@ export default function Landing() {
       const vh = window.innerHeight;
 
       // Landing fade out
-      const landingStayDuration = vh * 0.4;
+      const landingStayDuration = vh * 0;
       const landingFadeDuration = vh * 0.1;
       const landingFade = Math.max(
         0,
@@ -106,8 +106,8 @@ export default function Landing() {
       );
 
       // Spline section fade out (when reaching About section)
-      const splineFadeOutStart = vh * 1.5; // Start fading out at 1.5vh
-      const splineFadeOutDuration = vh * 0.3; // Fade out over 0.3vh
+      const splineFadeOutStart = vh * 0.8; // Start fading out at 1.5vh
+      const splineFadeOutDuration = vh * 0; // Fade out over 0.3vh
       const splineFadeOut = Math.max(
         0,
         1 - Math.max(0, (scrollY - splineFadeOutStart) / splineFadeOutDuration),
