@@ -53,23 +53,15 @@ export default function LandingHero({
         </GlassButton>
       </div>
 
-      <div className="page-element absolute left-0 bottom-0 h-80 w-210 z-20 bg-[url('/headline-bg.svg')] bg-cover drop-shadow-[0_20px_32px_rgba(0,0,0,0.6)]">
+      <div className="page-element absolute left-0 bottom-0 h-80 w-240 z-20 bg-[url('/headline-bg.svg')] bg-cover drop-shadow-[0_20px_32px_rgba(0,0,0,0.6)]">
         <div className="h-full flex flex-col justify-center items-start gap-3 pl-8">
-          <div className="flex flex-col gap-0 text-[38px] font-bold font-['Satoshi'] tracking-[9px]">
-            <h1 className="gradient-text-line1 animate-initial animate-slide-up delay-400 text-black">
-              Spend privately.
-            </h1>
-            <h1 className="gradient-text-line1 animate-initial animate-slide-up delay-500 text-black">
-              Member owned.
-            </h1>
-            <h1 className="gradient-text-line1animate-initial animate-slide-up delay-600 text-black">
-              Hold tokens to join.
+          <div className="flex flex-col gap-0 text-[48px] font-bold font-['Satoshi'] tracking-[6px]">
+            <h1 className="gradient-text-line1 animate-initial animate-slide-up delay-400 text-black max-w-150">
+              Your trusted partner for what's ahead.
             </h1>
           </div>
-          <p className="text-black text-[16px] font-bold font-['Satoshi'] leading-[1.6] max-w-148 animate-initial animate-slide-up delay-700">
-            A token-gated card built for private spending. Member-owned,
-            independent, and designed for those who value control, discretion,
-            and exclusivity.
+          <p className="text-black text-[24px] font-bold font-['Satoshi'] leading-[1.6] max-w-180 animate-initial animate-slide-up delay-700">
+            An invite only, self-custodial digital bank, for the private class.
           </p>
         </div>
       </div>
