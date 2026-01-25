@@ -60,7 +60,7 @@ export default function LandingHero({
               Your trusted partner for what's ahead.
             </h1>
           </div>
-          <p className="text-black text-[24px] font-bold font-['Satoshi'] leading-[1.6] max-w-180 animate-initial animate-slide-up delay-700">
+          <p className="text-black text-[22px] font-bold font-['Satoshi'] leading-[1.6] max-w-180 animate-initial animate-slide-up delay-700">
             An invite only, self-custodial digital bank, for the private class.
           </p>
         </div>

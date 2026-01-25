@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Landing from "@/components/landing";
+import Landing from "@/components/landing-v2";
 import MobileLanding from "@/components/mobile-landing";
 
 export default function Home() {
